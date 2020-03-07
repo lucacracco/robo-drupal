@@ -259,16 +259,20 @@ class Drupal8Task extends BaseTasks {
 
     // Copy or print the settings.php and services.yml files.
     $map = [
-      'settings' => [
-        "default.settings.php" => 'settings.php',
+      'settings.php' => [
+        //"{$this->enviroment}.tpl.settings.php",
+        "tpl.settings.php",
+        "default.settings.php",
       ],
-      'services' => [
-        "default.services.yml" => 'services.yml',
+      'services.yml' => [
+        //"{$this->enviroment}.tpl.services.yml",
+        "tpl.services.yml",
+        "default.services.yml",
       ],
     ];
 
-    foreach ($map as $file => $sources) {
-      foreach ($sources as $template_name => $destination_name) {
+    foreach ($map as $destination_name => $sources) {
+      foreach ($sources as $template_name) {
 
         $source = $base . DIRECTORY_SEPARATOR . $template_name;
         $destination = $base . DIRECTORY_SEPARATOR . $destination_name;

@@ -22,12 +22,19 @@ abstract class BaseTasks extends BaseTask implements BuilderAwareInterface {
   use IO;
 
   /**
+   * BaseTasks constructor.
+   */
+  public function __construct() {
+    // Nothing.
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function run() {
     $this->printTaskInfo($this->getPrintedTaskName());
     $this->startTimer();
-    $return = $this->getBuilder()->run();
+    $return = $this->collectionBuilder()->run();
     $this->stopTimer();
     return new Result($this, $return->getExitCode(), $return->getOutputData(), ['time' => $this->getExecutionTime()]);
   }
