@@ -164,11 +164,15 @@ class Drupal8Task extends BaseTasks {
    *
    * @return $this
    */
-  public function install($profile = 'standard', $username = 'admin', $password = 'admin', $mail = "admin@example.com", $locale = 'en') {
+  public function install($profile = 'standard', $username = 'admin', $password = 'admin', $mail = "admin@example.com", $locale = 'en', $config = FALSE) {
     // Build task.
     $task = $this->getDrushStack()
       ->drush('site-install')
       ->arg($profile);
+
+    if ($config) {
+      $task->option('--existing-config');
+    }
 
     //->rawArg("install_configure_form.update_status_module='array(FALSE,FALSE)'")
     //->rawArg("install_configure_form.enable_update_status_module=NULL")
@@ -364,7 +368,8 @@ class Drupal8Task extends BaseTasks {
   }
 
   /**
-   * Display a one time login link for the given user account (defaults to uid 1).
+   * Display a one time login link for the given user account (defaults to uid
+   * 1).
    *
    * @param string $user_name
    *

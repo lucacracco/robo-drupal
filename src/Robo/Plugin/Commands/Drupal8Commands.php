@@ -17,7 +17,7 @@ class Drupal8Commands extends \Robo\Tasks {
    *
    * Rebuild a Drupal 8 site and clear all its caches.
    *
-   * @command drupal:cache-rebuild
+   * @command cache-rebuild
    *
    * @aliases dcr
    * @usage dcr
@@ -29,7 +29,7 @@ class Drupal8Commands extends \Robo\Tasks {
   /**
    * Export configuration of drupal.
    *
-   * @command drupal:config:export
+   * @command config:export
    *
    * @arg config_export Destination directory_sync to save the configurations.
    *
@@ -43,7 +43,7 @@ class Drupal8Commands extends \Robo\Tasks {
   /**
    * Import configuration of drupal.
    *
-   * @command drupal:config:import
+   * @command config:import
    *
    * @aliases dci
    * @usage dci
@@ -55,7 +55,7 @@ class Drupal8Commands extends \Robo\Tasks {
   /**
    * Launch drupal core cron.
    *
-   * @command drupal:core-cron
+   * @command core-cron
    *
    * @aliases dcron
    */
@@ -66,7 +66,7 @@ class Drupal8Commands extends \Robo\Tasks {
   /**
    * Drop all tables in a Drupal database.
    *
-   * @command drupal:database:drop
+   * @command database:drop
    *
    * @interactConfirmCommand
    */
@@ -79,7 +79,7 @@ class Drupal8Commands extends \Robo\Tasks {
    *
    * @option directory Where to save the dump file.
    *
-   * @command drupal:database:export
+   * @command database:export
    */
   public function databaseExport($directory) {
     if (!file_exists($directory)) {
@@ -92,7 +92,7 @@ class Drupal8Commands extends \Robo\Tasks {
   /**
    * Import database.
    *
-   * @command drupal:database:import
+   * @command database:import
    *
    * @arg dump_file Path of dump file to import.
    */
@@ -107,7 +107,7 @@ class Drupal8Commands extends \Robo\Tasks {
    * @param $profile
    * @param array $opt
    *
-   * @command drupal:install
+   * @command install
    *
    * @aliases dsi
    *
@@ -124,9 +124,31 @@ class Drupal8Commands extends \Robo\Tasks {
   }
 
   /**
+   * Install Drupal profile with config.
+   *
+   * @param $profile
+   * @param array $opt
+   *
+   * @command install:config
+   *
+   * @aliases dsi
+   *
+   * @return \LucaCracco\RoboDrupal\Task\Drupal\Drupal8Task
+   */
+  public function installConfig($profile, $opt = [
+    'username' => 'admin',
+    'password' => 'admin',
+    'mail' => 'admin@example.com',
+    'locale' => 'en',
+  ]) {
+    return $this->taskDrupal8()
+      ->install($profile, $opt['username'], $opt['password'], $opt['mail'], $opt['locale'], TRUE);
+  }
+
+  /**
    * Checks for available translation updates.
    *
-   * @command drupal:locale:check
+   * @command locale:check
    */
   public function localeCheck() {
     return $this->taskDrupal8()->localeCheck();
@@ -135,7 +157,7 @@ class Drupal8Commands extends \Robo\Tasks {
   /**
    * Imports the available translation updates.
    *
-   * @command drupal:locale:update
+   * @command locale:update
    */
   public function localeUpdate() {
     return $this->taskDrupal8()->localeUpdate();
@@ -144,7 +166,7 @@ class Drupal8Commands extends \Robo\Tasks {
   /**
    * Active/disable maintenance_mode in Drupal site.
    *
-   * @command drupal:maintenance-mode
+   * @command maintenance-mode
    *
    * @arg active Indicate the status of maintenance mode to set.
    *
@@ -159,7 +181,7 @@ class Drupal8Commands extends \Robo\Tasks {
    *
    * Create the settings.php/services.yml from default template.
    *
-   * @command drupal:scaffold
+   * @command scaffold
    */
   public function scaffold() {
     return $this->taskDrupal8()->scaffold();
@@ -168,7 +190,7 @@ class Drupal8Commands extends \Robo\Tasks {
   /**
    * Print status of site.
    *
-   * @command drupal:status
+   * @command status
    */
   public function status() {
     print_r($this->input()->getOptions());
@@ -178,7 +200,7 @@ class Drupal8Commands extends \Robo\Tasks {
   /**
    * Apply any database updates required (as with running update.php).
    *
-   * @command drupal:updatedb
+   * @command updatedb
    *
    * @aliases dupdb
    */
@@ -189,7 +211,7 @@ class Drupal8Commands extends \Robo\Tasks {
   /**
    * Display a one time login link for the given user account (defaults to uid 1).
    *
-   * @command drupal:user-login
+   * @command user-login
    *
    * @arg user An optional uid, user name, or email address for the user to log in as. Default is to log in as uid 1.
    *
