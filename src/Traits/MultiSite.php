@@ -3,6 +3,7 @@
 namespace LucaCracco\RoboDrupal\Traits;
 
 use Consolidation\AnnotatedCommand\AnnotationData;
+use DrupalFinder\DrupalFinder;
 use \Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Consolidation\Config\Loader\ConfigProcessor;
@@ -43,7 +44,18 @@ trait MultiSite {
    * @return array
    */
   public function getSitesAvailable() {
-    return ['default' => 'Default'];
+    $drupalFinder = new DrupalFinder();
+    $drupalFinder->locateRoot('.');
+    $base = $drupalFinder->getDrupalRoot() . "/sites/sites.php";
+
+    if (!file_exists($base)) {
+      return ['default' => 'default'];
+    }
+
+    // Path to sites.php file.
+    include($base);
+    $sites = array_flip($sites);
+    return $sites;
   }
 
   /**

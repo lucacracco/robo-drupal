@@ -34,6 +34,7 @@ class Drupal8Task extends BaseTasks {
   public function __construct() {
     parent::__construct();
     $this->drupalFinder = new DrupalFinder();
+    // TODO: how define the locale root? for launch comand outsite root project.
     $this->drupalFinder->locateRoot('.');
   }
 
