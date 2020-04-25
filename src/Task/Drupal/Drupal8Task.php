@@ -146,12 +146,51 @@ class Drupal8Task extends BaseTasks {
   }
 
   /**
+   * Deploy: run updb, config-import and clear cache.
+   *
+   * @return $this
+   */
+  public function deploy() {
+    $task_list = [
+      'updateDb' => $this->taskDrushStack()->drush('updatedb'),
+      'configImport' => $this->taskDrushStack()->drush('config-import'),
+      'cacheRebuild' => $this->taskDrushStack()
+        ->drush('cache-rebuild'),
+      'configImport_2' => $this->taskDrushStack()->drush('config-import'),
+      'cacheRebuild_2' => $this->taskDrushStack()->drush('cache-rebuild'),
+    ];
+    $this->getBuilder()->addTaskList($task_list);
+    return $this;
+  }
+
+  /**
+   * Return a drush stack with already set uri.
+   *
+   * @return \LucaCracco\RoboDrupal\Task\Drush\DrushTask
+   */
+  public function getDrushStack() {
+    return $this->taskDrushStack($this->site);
+  }
+
+  /**
    * Get site selected.
    *
    * @return string
    */
-  public function getSite(): string {
+  public function getSite() {
     return $this->site;
+  }
+
+  /**
+   * Set site target.
+   *
+   * @param string $site
+   *
+   * @return $this
+   */
+  public function setSite(string $site) {
+    $this->site = $site;
+    return $this;
   }
 
   /**
@@ -331,18 +370,6 @@ class Drupal8Task extends BaseTasks {
   }
 
   /**
-   * Set site target.
-   *
-   * @param string $site
-   *
-   * @return $this
-   */
-  public function setSite(string $site) {
-    $this->site = $site;
-    return $this;
-  }
-
-  /**
    * Display the status of site.
    *
    * @return $this
@@ -386,15 +413,6 @@ class Drupal8Task extends BaseTasks {
     ];
     $this->getBuilder()->addTaskList($task_list);
     return $this;
-  }
-
-  /**
-   * Return a drush stack with already set uri.
-   *
-   * @return \LucaCracco\RoboDrupal\Task\Drush\DrushTask
-   */
-  protected function getDrushStack() {
-    return $this->taskDrushStack($this->site);
   }
 
 }
