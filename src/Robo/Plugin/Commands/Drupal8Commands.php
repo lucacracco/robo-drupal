@@ -102,6 +102,17 @@ class Drupal8Commands extends \Robo\Tasks {
   }
 
   /**
+   * Deploy: run updb, config-import and clear cache.
+   *
+   * @command deploy
+   *
+   * @aliases dpl
+   */
+  public function deploy() {
+    return $this->taskDrupal8()->deploy();
+  }
+
+  /**
    * Install Drupal profile.
    *
    * @param $profile
@@ -131,7 +142,7 @@ class Drupal8Commands extends \Robo\Tasks {
    *
    * @command install:config
    *
-   * @aliases dsi
+   * @aliases dsic
    *
    * @return \LucaCracco\RoboDrupal\Task\Drupal\Drupal8Task
    */
@@ -143,6 +154,36 @@ class Drupal8Commands extends \Robo\Tasks {
   ]) {
     return $this->taskDrupal8()
       ->install($profile, $opt['username'], $opt['password'], $opt['mail'], $opt['locale'], TRUE);
+  }
+
+  /**
+   * Install database (drop exist and import the dump target). Only .sql file.
+   *
+   * @command install:database
+   *
+   * @param string $dump_file
+   *
+   * @aliases dsid
+   *
+   * @return \Robo\Collection\CollectionBuilder
+   */
+  public function installDatabase($dump_file) {
+    $task_list = [];
+    $file = new \SplFileInfo($dump_file);
+    $ext = $file->getExtension();
+
+    if (!file_exists($file) || $ext != 'sql') {
+      throw new \InvalidArgumentException("The file does not respect the correct format.");
+    }
+
+    $task_list['sqlDrop'] = $this->taskDrupal8()
+      ->getDrushStack()
+      ->drush('sql-drop');
+    $task_list['sqlCli'] = $this->taskDrupal8()->getDrushStack()
+      ->drush('sql-cli < ')
+      ->arg($dump_file);
+    $this->getBuilder()->addTaskList($task_list);
+    return $this->getBuilder();
   }
 
   /**
