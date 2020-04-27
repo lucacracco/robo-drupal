@@ -11,3 +11,8 @@ This repository contains a library dedicated to the initialization, building, ma
 ## Commands
 
 Use `vendor/bin/robo list` for see all commands.
+
+## Notes
+
+When use multisite features is required to configure `sites.php` with all sites that you are working.
+ 

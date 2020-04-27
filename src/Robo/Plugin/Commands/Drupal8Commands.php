@@ -18,9 +18,10 @@ class Drupal8Commands extends \Robo\Tasks {
    * Rebuild a Drupal 8 site and clear all its caches.
    *
    * @command cache-rebuild
-   *
    * @aliases dcr
    * @usage dcr
+   *
+   * @return \LucaCracco\RoboDrupal\Task\Drupal\Drupal8Task
    */
   public function cacheRebuild() {
     return $this->taskDrupal8()->cacheRebuild();
@@ -30,23 +31,23 @@ class Drupal8Commands extends \Robo\Tasks {
    * Export configuration of drupal.
    *
    * @command config:export
-   *
-   * @arg config_export Destination directory_sync to save the configurations.
-   *
    * @aliases dce
    * @usage dce
+   *
+   * @return \LucaCracco\RoboDrupal\Task\Drupal\Drupal8Task
    */
-  public function configExport($config_export = 'sync') {
-    return $this->taskDrupal8()->configExport($config_export);
+  public function configExport() {
+    return $this->taskDrupal8()->configExport();
   }
 
   /**
    * Import configuration of drupal.
    *
    * @command config:import
-   *
    * @aliases dci
    * @usage dci
+   *
+   * @return \LucaCracco\RoboDrupal\Task\Drupal\Drupal8Task
    */
   public function configImport() {
     return $this->taskDrupal8()->configImport();
@@ -56,8 +57,9 @@ class Drupal8Commands extends \Robo\Tasks {
    * Launch drupal core cron.
    *
    * @command core-cron
-   *
    * @aliases dcron
+   *
+   * @return \LucaCracco\RoboDrupal\Task\Drupal\Drupal8Task
    */
   public function coreCron() {
     return $this->taskDrupal8()->coreCron();
@@ -67,8 +69,9 @@ class Drupal8Commands extends \Robo\Tasks {
    * Drop all tables in a Drupal database.
    *
    * @command database:drop
-   *
    * @interactConfirmCommand
+   *
+   * @return \LucaCracco\RoboDrupal\Task\Drupal\Drupal8Task
    */
   public function databaseDrop() {
     return $this->taskDrupal8()->databaseDrop();
@@ -78,8 +81,12 @@ class Drupal8Commands extends \Robo\Tasks {
    * Export database.
    *
    * @option directory Where to save the dump file.
-   *
    * @command database:export
+   *
+   * @param string $directory
+   *   The path of directory where save the dump file.
+   *
+   * @return \LucaCracco\RoboDrupal\Task\Drupal\Drupal8Task
    */
   public function databaseExport($directory) {
     if (!file_exists($directory)) {
@@ -93,8 +100,9 @@ class Drupal8Commands extends \Robo\Tasks {
    * Import database.
    *
    * @command database:import
-   *
    * @arg dump_file Path of dump file to import.
+   *
+   * @return \LucaCracco\RoboDrupal\Task\Drupal\Drupal8Task
    */
   public function databaseImport($dump_file) {
     // TODO: check if dump file exist.
@@ -105,7 +113,6 @@ class Drupal8Commands extends \Robo\Tasks {
    * Deploy: run updb, config-import and clear cache.
    *
    * @command deploy
-   *
    * @aliases dpl
    */
   public function deploy() {
@@ -115,12 +122,14 @@ class Drupal8Commands extends \Robo\Tasks {
   /**
    * Install Drupal profile.
    *
-   * @param $profile
-   * @param array $opt
-   *
    * @command install
-   *
+   * @arg profile Profile name to use.
    * @aliases dsi
+   *
+   * @param string $profile
+   *   The profile name to use.
+   * @param array $opt
+   *   An array of options for installation.
    *
    * @return \LucaCracco\RoboDrupal\Task\Drupal\Drupal8Task
    */
@@ -137,12 +146,14 @@ class Drupal8Commands extends \Robo\Tasks {
   /**
    * Install Drupal profile with config.
    *
-   * @param $profile
-   * @param array $opt
-   *
    * @command install:config
-   *
+   * @arg profile Profile name to use.
    * @aliases dsic
+   *
+   * @param string $profile
+   *   The profile name to use.
+   * @param array $opt
+   *   An array of options for installation.
    *
    * @return \LucaCracco\RoboDrupal\Task\Drupal\Drupal8Task
    */
@@ -160,10 +171,10 @@ class Drupal8Commands extends \Robo\Tasks {
    * Install database (drop exist and import the dump target). Only .sql file.
    *
    * @command install:database
+   * @aliases dsid
    *
    * @param string $dump_file
-   *
-   * @aliases dsid
+   *   The path of dump file to use.
    *
    * @return \Robo\Collection\CollectionBuilder
    */
@@ -190,6 +201,8 @@ class Drupal8Commands extends \Robo\Tasks {
    * Checks for available translation updates.
    *
    * @command locale:check
+   *
+   * @return \LucaCracco\RoboDrupal\Task\Drupal\Drupal8Task
    */
   public function localeCheck() {
     return $this->taskDrupal8()->localeCheck();
@@ -199,6 +212,8 @@ class Drupal8Commands extends \Robo\Tasks {
    * Imports the available translation updates.
    *
    * @command locale:update
+   *
+   * @return \LucaCracco\RoboDrupal\Task\Drupal\Drupal8Task
    */
   public function localeUpdate() {
     return $this->taskDrupal8()->localeUpdate();
@@ -208,10 +223,13 @@ class Drupal8Commands extends \Robo\Tasks {
    * Active/disable maintenance_mode in Drupal site.
    *
    * @command maintenance-mode
-   *
    * @arg active Indicate the status of maintenance mode to set.
-   *
    * @aliases dmm
+   *
+   * @param bool $active
+   *   Status to be set.
+   *
+   * @return \LucaCracco\RoboDrupal\Task\Drupal\Drupal8Task
    */
   public function maintenanceMode($active = TRUE) {
     return $this->taskDrupal8()->maintenanceMode($active);
@@ -223,6 +241,9 @@ class Drupal8Commands extends \Robo\Tasks {
    * Create the settings.php/services.yml from default template.
    *
    * @command scaffold
+   *
+   * @return \LucaCracco\RoboDrupal\Task\Drupal\Drupal8Task
+   * @throws \Robo\Exception\TaskException
    */
   public function scaffold() {
     return $this->taskDrupal8()->scaffold();
@@ -232,18 +253,20 @@ class Drupal8Commands extends \Robo\Tasks {
    * Print status of site.
    *
    * @command status
+   *
+   * @return \LucaCracco\RoboDrupal\Task\Drupal\Drupal8Task
    */
   public function status() {
-    print_r($this->input()->getOptions());
-    return $this->taskDrupal8()->status()->run();
+    return $this->taskDrupal8()->status();
   }
 
   /**
    * Apply any database updates required (as with running update.php).
    *
    * @command updatedb
-   *
    * @aliases dupdb
+   *
+   * @return \LucaCracco\RoboDrupal\Task\Drupal\Drupal8Task
    */
   public function updateDatabase() {
     return $this->taskDrupal8()->updateDatabase();
@@ -253,10 +276,13 @@ class Drupal8Commands extends \Robo\Tasks {
    * Display a one time login link for the given user account (defaults to uid 1).
    *
    * @command user-login
-   *
    * @arg user An optional uid, user name, or email address for the user to log in as. Default is to log in as uid 1.
-   *
    * @aliases duli
+   *
+   * @param string $user
+   *    The user name id, name or email address.
+   *
+   * @return \LucaCracco\RoboDrupal\Task\Drupal\Drupal8Task
    */
   public function userLogin($user) {
     return $this->taskDrupal8()->userLogin($user);

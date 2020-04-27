@@ -37,6 +37,34 @@ class DrushTask extends CommandStack {
   protected $alias;
 
   /**
+   * Add or not the --ansi option.
+   *
+   * @var bool
+   */
+  protected $ansi;
+
+  /**
+   * Drush commands to execute when task is run.
+   *
+   * @var array
+   */
+  protected $commands;
+
+  /**
+   * Indicates if the command output should be debug verbosity.
+   *
+   * @var bool
+   */
+  protected $debug;
+
+  /**
+   * Defaults init.
+   *
+   * @var bool
+   */
+  protected $defaultsInitialized;
+
+  /**
    * Directory to execute the command from.
    *
    * @var string
@@ -44,6 +72,20 @@ class DrushTask extends CommandStack {
    * @see ExecTrait::$workingDirectory
    */
   protected $dir;
+
+  /**
+   * Additional directory paths to search for drush commands.
+   *
+   * @var string
+   */
+  protected $include;
+
+  /**
+   * Options for each drush command.
+   *
+   * @var array
+   */
+  protected $options;
 
   /**
    * Site uri to append uri option to each command.
@@ -67,46 +109,60 @@ class DrushTask extends CommandStack {
   protected $veryVerbose;
 
   /**
+   * Sets the site alias to be used for each command.
+   *
+   * @param string $alias
+   *   The drush alias to use. Do NOT include "@" prefix.
+   *
+   * @return $this
+   */
+  public function alias($alias) {
+    $this->alias = $alias;
+    return $this;
+  }
+
+  /**
+   * Include or not the --ansi option for drush commands.
+   *
+   * @param bool $ansi
+   *   The flag for including --ansi option.
+   *
+   * @return $this
+   */
+  public function ansi($ansi) {
+    $this->ansi = $ansi;
+    return $this;
+  }
+
+  /**
    * Indicates if the command output should be debug verbosity.
    *
-   * @var bool
+   * @param string|bool $verbose
+   *   Verbose.
+   *
+   * @return $this
    */
-  protected $debug;
+  public function debug($verbose) {
+    $this->debug = $this->mixedToBool($verbose);
+    return $this;
+  }
 
   /**
-   * Defaults init.
+   * Sets the working directory for each command.
    *
-   * @var bool
+   * @param string $dir
+   *   Dir.
+   *
+   * @return $this
+   *
+   * @see ExecTrait::$workingDirectory
    */
-  protected $defaultsInitialized;
+  public function dir($dir) {
+    $this->dir = $dir;
+    parent::dir($dir);
 
-  /**
-   * Additional directory paths to search for drush commands.
-   *
-   * @var string
-   */
-  protected $include;
-
-  /**
-   * Add or not the --ansi option.
-   *
-   * @var bool
-   */
-  protected $ansi;
-
-  /**
-   * Drush commands to execute when task is run.
-   *
-   * @var array
-   */
-  protected $commands;
-
-  /**
-   * Options for each drush command.
-   *
-   * @var array
-   */
-  protected $options;
+    return $this;
+  }
 
   /**
    * Adds the given drush command to a stack.
@@ -133,16 +189,64 @@ class DrushTask extends CommandStack {
   }
 
   /**
-   * Sets the site alias to be used for each command.
+   * Include additional directory paths to search for drush commands.
    *
-   * @param string $alias
-   *   The drush alias to use. Do NOT include "@" prefix.
+   * @param string $path
+   *   The filepath for the --include option.
    *
    * @return $this
    */
-  public function alias($alias) {
-    $this->alias = $alias;
+  public function includePath($path) {
+    $this->include = $path;
     return $this;
+  }
+
+  /**
+   * Overriding CommandArguments::option to default option separator to '='.
+   */
+  public function option($option, $value = NULL, $separator = '=') {
+    return $this->traitOption($option, $value, $separator);
+  }
+
+  /**
+   * Overriding parent::run() method to remove printTaskInfo() calls.
+   *
+   * Make note that if stopOnFail() is TRUE, then result data isn't returned!
+   * Maybe this should be changed.
+   */
+  public function run() {
+    $this->setupExecution();
+    if (empty($this->exec)) {
+      throw new TaskException($this, 'You must add at least one command');
+    }
+
+    // Set $input to NULL so that it is not inherited by the process.
+    $this->setInput(NULL);
+
+    // If 'stopOnFail' is not set, or if there is only one command to run,
+    // then execute the single command to run.
+    if (!$this->stopOnFail || (count($this->exec) == 1)) {
+      return $this->executeCommand($this->getCommand());
+    }
+
+    // When executing multiple commands in 'stopOnFail' mode, run them
+    // one at a time so that the result will have the exact command
+    // that failed available to the caller. This is at the expense of
+    // losing the output from all successful commands.
+    $data = [];
+    $message = '';
+    $result = NULL;
+    foreach ($this->exec as $command) {
+      $result = $this->executeCommand($command);
+      $result->accumulateExecutionTime($data);
+      $message = $result->accumulateMessage($message);
+      $data = $result->mergeData($data);
+      if (!$result->wasSuccessful()) {
+        return $result;
+      }
+    }
+
+    return $result;
   }
 
   /**
@@ -155,23 +259,6 @@ class DrushTask extends CommandStack {
    */
   public function uri($uri) {
     $this->uri = $uri;
-
-    return $this;
-  }
-
-  /**
-   * Sets the working directory for each command.
-   *
-   * @param string $dir
-   *   Dir.
-   *
-   * @return $this
-   *
-   * @see ExecTrait::$workingDirectory
-   */
-  public function dir($dir) {
-    $this->dir = $dir;
-    parent::dir($dir);
 
     return $this;
   }
@@ -199,45 +286,6 @@ class DrushTask extends CommandStack {
    */
   public function veryVerbose($verbose) {
     $this->veryVerbose = $this->mixedToBool($verbose);
-    return $this;
-  }
-
-  /**
-   * Indicates if the command output should be debug verbosity.
-   *
-   * @param string|bool $verbose
-   *   Verbose.
-   *
-   * @return $this
-   */
-  public function debug($verbose) {
-    $this->debug = $this->mixedToBool($verbose);
-    return $this;
-  }
-
-  /**
-   * Include additional directory paths to search for drush commands.
-   *
-   * @param string $path
-   *   The filepath for the --include option.
-   *
-   * @return $this
-   */
-  public function includePath($path) {
-    $this->include = $path;
-    return $this;
-  }
-
-  /**
-   * Include or not the --ansi option for drush commands.
-   *
-   * @param bool $ansi
-   *   The flag for including --ansi option.
-   *
-   * @return $this
-   */
-  public function ansi($ansi) {
-    $this->ansi = $ansi;
     return $this;
   }
 
@@ -290,21 +338,6 @@ class DrushTask extends CommandStack {
       $boolVar = (bool) $mixedVar;
     }
     return $boolVar;
-  }
-
-  /**
-   * Associates arguments with their corresponding drush command.
-   */
-  protected function setOptionsForLastCommand() {
-    if (isset($this->commands)) {
-      $numberOfCommands = count($this->commands);
-      $correspondingCommand = $numberOfCommands - 1;
-      $this->options[$correspondingCommand] = $this->arguments;
-      $this->arguments = '';
-    }
-    elseif (isset($this->arguments) && !empty($this->arguments)) {
-      throw new TaskException($this, "A drush command must be added to the stack before setting arguments: {$this->arguments}");
-    }
   }
 
   /**
@@ -363,51 +396,18 @@ class DrushTask extends CommandStack {
   }
 
   /**
-   * Overriding CommandArguments::option to default option separator to '='.
+   * Associates arguments with their corresponding drush command.
    */
-  public function option($option, $value = NULL, $separator = '=') {
-    return $this->traitOption($option, $value, $separator);
-  }
-
-  /**
-   * Overriding parent::run() method to remove printTaskInfo() calls.
-   *
-   * Make note that if stopOnFail() is TRUE, then result data isn't returned!
-   * Maybe this should be changed.
-   */
-  public function run() {
-    $this->setupExecution();
-    if (empty($this->exec)) {
-      throw new TaskException($this, 'You must add at least one command');
+  protected function setOptionsForLastCommand() {
+    if (isset($this->commands)) {
+      $numberOfCommands = count($this->commands);
+      $correspondingCommand = $numberOfCommands - 1;
+      $this->options[$correspondingCommand] = $this->arguments;
+      $this->arguments = '';
     }
-
-    // Set $input to NULL so that it is not inherited by the process.
-    $this->setInput(NULL);
-
-    // If 'stopOnFail' is not set, or if there is only one command to run,
-    // then execute the single command to run.
-    if (!$this->stopOnFail || (count($this->exec) == 1)) {
-      return $this->executeCommand($this->getCommand());
+    elseif (isset($this->arguments) && !empty($this->arguments)) {
+      throw new TaskException($this, "A drush command must be added to the stack before setting arguments: {$this->arguments}");
     }
-
-    // When executing multiple commands in 'stopOnFail' mode, run them
-    // one at a time so that the result will have the exact command
-    // that failed available to the caller. This is at the expense of
-    // losing the output from all successful commands.
-    $data = [];
-    $message = '';
-    $result = NULL;
-    foreach ($this->exec as $command) {
-      $result = $this->executeCommand($command);
-      $result->accumulateExecutionTime($data);
-      $message = $result->accumulateMessage($message);
-      $data = $result->mergeData($data);
-      if (!$result->wasSuccessful()) {
-        return $result;
-      }
-    }
-
-    return $result;
   }
 
   /**

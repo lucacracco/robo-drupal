@@ -25,7 +25,7 @@ trait Tasks {
     $output = $this->output();
     $task->setVerbosityThreshold($output->getVerbosity());
 
-    if (method_exists($this, 'getSite')) {
+    if (method_exists($this, 'getSite') && $this->getSite()) {
       $task->setSite($this->getSite());
     }
 

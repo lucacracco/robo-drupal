@@ -3,12 +3,10 @@
 namespace LucaCracco\RoboDrupal\Traits;
 
 use Consolidation\AnnotatedCommand\AnnotationData;
+use Consolidation\AnnotatedCommand\CommandData;
 use DrupalFinder\DrupalFinder;
 use \Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
-use Consolidation\Config\Loader\ConfigProcessor;
-use Consolidation\Config\Loader\YamlConfigLoader;
-use Robo\Robo;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -25,15 +23,27 @@ trait MultiSite {
    *
    * @var string
    */
-  protected $site = 'default';
+  protected $site;
 
   /**
    * Get site.
    *
    * @return string
    */
-  public function getSite(): string {
+  public function getSite() {
     return $this->site;
+  }
+
+  /**
+   * Set site.
+   *
+   * @param string $site
+   *
+   * @return $this
+   */
+  public function setSite(string $site) {
+    $this->site = $site;
+    return $this;
   }
 
   /**
@@ -59,6 +69,8 @@ trait MultiSite {
   }
 
   /**
+   * Request what site the command is applied.
+   *
    * @hook interact
    */
   public function interact(InputInterface $input, OutputInterface $output, AnnotationData $annotationData) {
@@ -69,37 +81,6 @@ trait MultiSite {
       $site = $io->choice("Enter a site:", $sites);
       $input->setOption('site', $site);
     }
-
-    $this->setSite($site);
-
-    //// Initialize configuration objects.
-    //$config = Robo::config();
-    //$loader = new YamlConfigLoader();
-    //$processor = new ConfigProcessor();
-    //
-    //// Extend and import configuration.
-    //$processor->add($config->export());
-    //$processor->extend($loader->load($site . '.robo.yml'));
-    ////    $processor->extend($loader->load($input->getOption('config')));
-    //
-    //// Export configurations loaded with unprocessed tokens.
-    //$export = $processor->export();
-    //$expanded = \Grasmash\YamlExpander\Expander::expandArrayProperties($export);
-    //
-    //// Reimport the config, with the tokens replaced.
-    //$config->replace($expanded);
-  }
-
-  /**
-   * Set site.
-   *
-   * @param string $site
-   *
-   * @return $this
-   */
-  public function setSite(string $site) {
-    $this->site = $site;
-    return $this;
   }
 
   /**
@@ -107,6 +88,34 @@ trait MultiSite {
    */
   public function siteOptions(Command $command, AnnotationData $annotationData) {
     $command->addOption('site', 's', InputOption::VALUE_OPTIONAL, 'Indicate which site you are running the command.', 'default');
+  }
+
+  /**
+   * Validate site selected and set variable of trait.
+   *
+   * @hook validate
+   */
+  public function validateSite(CommandData $commandData) {
+
+    // Retrieve the site option selected.
+    // Selected in @hook interact or pass how option in the command.
+    $input = $commandData->input();
+    $site = $input->getOption('site');
+    $sites = $this->getSitesAvailable();
+
+    if (empty($site)) {
+      // The fallback value from getSitesAvailable is 'default', when sites.php
+      // is empty or not found.
+      $this->setSite(array_key_first($sites));
+      return;
+    }
+
+    if (!in_array($site, array_keys($sites))) {
+      throw new \InvalidArgumentException("Site $site selected not found");
+    }
+
+    // Set site.
+    $this->setSite($site);
   }
 
 }
