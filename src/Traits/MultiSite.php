@@ -25,7 +25,7 @@ trait MultiSite {
    *
    * @var string
    */
-  protected $site;
+  protected $site = 'default';
 
   /**
    * Get site.
