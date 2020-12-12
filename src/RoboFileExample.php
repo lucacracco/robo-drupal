@@ -13,12 +13,15 @@ class RoboFileExample extends \Robo\Tasks {
   use \LucaCracco\RoboDrupal\Traits\MultiSite;
 
   /**
-   * Print site selected.
-   *
-   * @command test:simple
+   * @hook process drupal:scaffold
    */
-  public function testSimple() {
-    $this->yell("Selected \"{$this->getSite()}\"");
+  public function process($result, \Consolidation\AnnotatedCommand\CommandData $commandData) {
+    if ($result instanceof \Robo\Collection\CollectionBuilder) {
+      $result->getCollection()
+        ->after('copy-settings.php', $this->taskFilesystemStack()
+          ->touch("pippo.txt")
+          ->remove('pippo.txt'));
+    }
   }
 
   /**
@@ -31,15 +34,12 @@ class RoboFileExample extends \Robo\Tasks {
   }
 
   /**
-   * @hook process drupal:scaffold
+   * Print site selected.
+   *
+   * @command test:simple
    */
-  public function process($result, \Consolidation\AnnotatedCommand\CommandData $commandData) {
-    if ($result instanceof \Robo\Collection\CollectionBuilder) {
-      $result->getCollection()
-        ->after('copy-settings.php', $this->taskFilesystemStack()
-          ->touch("pippo.txt")
-          ->remove('pippo.txt'));
-    }
+  public function testSimple() {
+    $this->yell("Selected \"{$this->getSite()}\"");
   }
 
 }

@@ -18,7 +18,6 @@ use Robo\Task\BaseTask;
 abstract class BaseTasks extends BaseTask implements BuilderAwareInterface {
 
   use LoadAllTasks;
-  //use BuilderAwareTrait;
   use IO;
 
   /**

@@ -106,7 +106,8 @@ trait MultiSite {
     if (empty($site)) {
       // The fallback value from getSitesAvailable is 'default', when sites.php
       // is empty or not found.
-      $this->setSite(array_key_first($sites));
+      $first_site_declared = reset($sites);
+      $this->setSite(key($first_site_declared));
       return;
     }
 
