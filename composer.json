@@ -16,7 +16,7 @@
   ],
   "require": {
     "php": ">=7.1",
-    "consolidation/robo": "^3.0",
+    "consolidation/robo": "^2.2",
     "grasmash/yaml-expander": "^1.4",
     "heydon/robo-twig": "2.x",
     "webflo/drupal-finder": "^1.0"
