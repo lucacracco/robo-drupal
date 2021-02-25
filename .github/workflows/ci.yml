@@ -1,0 +1,25 @@
+name: Tests and code
+on: [ push, pull_request ]
+
+jobs:
+  testing:
+    name: Drupal ${{ matrix.drupal-versions }} with PHP ${{ matrix.php-versions }}
+    runs-on: ubuntu-latest
+    container: php:${{ matrix.php-versions }}-fpm-buster
+    strategy:
+      fail-fast: false
+      matrix:
+        php-versions: [ '7.2', '7.3', '7.4' ]
+        drupal-versions: [ '8.8.12', '8.9.13' ]
+    #    php-versions: [ '7.2' ]
+    #    drupal-versions: [ '8.8.12' ]
+
+    steps:
+      - name: Checkout Coder
+        uses: actions/checkout@v2
+      - name: Setup Container Requirements
+        run: ./tests/setup.sh
+      - name: Run test
+        run: ./tests/test.sh
+        env:
+          DRUPAL_CORE_CONSTRAINT: ${{ matrix.drupal-versions }}

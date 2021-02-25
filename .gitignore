@@ -70,3 +70,7 @@ Temporary Items
 
 ### JetBrains template
 .idea
+
+### Project development
+composer.lock
+/vendor
