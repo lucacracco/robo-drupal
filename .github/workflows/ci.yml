@@ -2,7 +2,7 @@ name: Tests and code
 on: [ push, pull_request ]
 
 jobs:
-  testing:
+  drupal8:
     name: Drupal ${{ matrix.drupal-versions }} with PHP ${{ matrix.php-versions }}
     runs-on: ubuntu-latest
     container: php:${{ matrix.php-versions }}-fpm-buster
@@ -10,9 +10,9 @@ jobs:
       fail-fast: false
       matrix:
         php-versions: [ '7.2', '7.3', '7.4' ]
-        drupal-versions: [ '8.8.12', '8.9.13', '9.1.4' ]
-    #    php-versions: [ '7.2' ]
-    #    drupal-versions: [ '8.8.12' ]
+        drupal-versions: [ '~8.8.0', '~8.9.0' ]
+    env:
+      DRUPAL_CORE_CONSTRAINT: ${{ matrix.drupal-versions }}
 
     steps:
       - name: Checkout Coder
@@ -21,5 +21,3 @@ jobs:
         run: ./tests/setup.sh
       - name: Run test
         run: ./tests/test.sh
-        env:
-          DRUPAL_CORE_CONSTRAINT: ${{ matrix.drupal-versions }}

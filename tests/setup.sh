@@ -2,10 +2,11 @@
 
 set -e
 
-DRUPAL_CORE_CONSTRAINT="${DRUPAL_CORE_CONSTRAINT:=8.8.12}"
+function version() { echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'; }
+DRUPAL_CORE_CONSTRAINT="${DRUPAL_CORE_CONSTRAINT:=~8.8.0}"
 
-apt-get update
-apt-get install -y --no-install-recommends \
+apt-get update >/dev/null
+apt-get install -y -qq --no-install-recommends \
   libfreetype6-dev \
   libjpeg-dev \
   libpng-dev \
@@ -13,16 +14,14 @@ apt-get install -y --no-install-recommends \
   libzip-dev \
   unzip \
   git \
-  sqlite3
-
-#docker-php-ext-configure gd --with-freetype --with-jpeg=/usr
+  sqlite3 >/dev/null
 
 docker-php-ext-install -j "$(nproc)" \
   gd \
   opcache \
   pdo_mysql \
   pdo_pgsql \
-  zip
+  zip >/dev/null
 
 # Set PHP.ini settings
 echo 'memory_limit = -1' >>/usr/local/etc/php/conf.d/docker-php-memlimit.ini
@@ -30,9 +29,10 @@ echo 'memory_limit = -1' >>/usr/local/etc/php/conf.d/docker-php-memlimit.ini
 # Install composer
 curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Rollback to composer1 for Drupal 8.8.12
+# Rollback to composer1 for Drupal < 8.9
 echo "\n\nDrupal core constraint: $DRUPAL_CORE_CONSTRAINT\n\n"
-if [[ "$DRUPAL_CORE_CONSTRAINT" == "8.8.12" ]]; then
+VERSION=$(echo $DRUPAL_CORE_CONSTRAINT | tr --delete \~)
+if [ $(version "$VERSION") -lt $(version "8.9") ]; then
   composer self-update --1
   composer global require hirak/prestissimo
 fi
