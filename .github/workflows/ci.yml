@@ -9,10 +9,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: [ '7.2', '7.3', '7.4' ]
-        drupal-versions: [ '8.8.12', '8.9.13', '9.1.4' ]
-    #    php-versions: [ '7.2' ]
-    #    drupal-versions: [ '8.8.12' ]
+        php-versions: [ '7.3', '7.4' ]
+        drupal-versions: [ '~9.0.0', '~9.1.0' ]
+    env:
+      DRUPAL_CORE_CONSTRAINT: ${{ matrix.drupal-versions }}
 
     steps:
       - name: Checkout Coder
@@ -21,5 +21,3 @@ jobs:
         run: ./tests/setup.sh
       - name: Run test
         run: ./tests/test.sh
-        env:
-          DRUPAL_CORE_CONSTRAINT: ${{ matrix.drupal-versions }}

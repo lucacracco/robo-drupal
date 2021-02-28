@@ -11,7 +11,7 @@ fi
 echo -e "\n\nDirectory running ${PWD}\n"
 FOLDER_REPO=${FOLDER_REPO:="${PWD}"}
 FOLDER_TESTS=${FOLDER_TESTS:="${PWD}/../robo-drupal-demo"}
-DRUPAL_CORE_CONSTRAINT="${DRUPAL_CORE_CONSTRAINT:=8.8.12}"
+DRUPAL_CORE_CONSTRAINT="${DRUPAL_CORE_CONSTRAINT:=~9.0.0}"
 
 echo -e "\nClear/Create directory of install drupal for tests\n"
 mkdir -p $FOLDER_TESTS
