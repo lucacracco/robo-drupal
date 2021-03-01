@@ -14,7 +14,7 @@ use LucaCracco\RoboDrupal\Task\BaseTasks;
 class Drupal8Task extends BaseTasks {
 
   use \LucaCracco\RoboDrupal\Task\Drush\Tasks;
-  use \Heydon\Robo\Task\Twig\loadTasks;
+  use \LucaCracco\RoboDrupal\Task\Twig\Tasks;
 
   /**
    * @var \DrupalFinder\DrupalFinder
@@ -320,7 +320,7 @@ class Drupal8Task extends BaseTasks {
 
         $source = $base . DIRECTORY_SEPARATOR . $template_name;
         $destination = $base . DIRECTORY_SEPARATOR . $destination_name;
-        if (!file_exists($source)) {
+        if (!(file_exists($source) || file_exists($source . '.twig'))) {
           continue;
         }
 

@@ -2,8 +2,6 @@
 
 set -e
 
-DRUPAL_CORE_CONSTRAINT="${DRUPAL_CORE_CONSTRAINT:=~9.8.0}"
-
 apt-get update >/dev/null
 apt-get install -y -qq --no-install-recommends \
   libfreetype6-dev \

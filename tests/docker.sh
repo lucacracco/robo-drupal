@@ -3,7 +3,7 @@
 # Exit when any command fails.
 set -e
 
-PHP_VERSION=${PHP_VERSION:='7.2-fpm'}
+PHP_VERSION=${PHP_VERSION:='7.3-fpm'}
 DRUPAL_CORE_CONSTRAINT="${DRUPAL_CORE_CONSTRAINT:=~9.0.0}"
 
 echo -e "Run tests with PHP $PHP_VERSION for Drupal $DRUPAL_CORE_CONSTRAINT\n"

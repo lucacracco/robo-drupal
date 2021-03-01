@@ -36,9 +36,9 @@ echo -e "\nUpdating dependencies\n"
 composer update --no-interaction --working-dir=$FOLDER_TESTS
 
 echo -e "\nCopy template settings\n"
-cp -v "./tests/template/tpl.settings.php" "$FOLDER_TESTS/web/sites/default/tpl.settings.php"
-cp -v "./tests/template/tpl.services.yml" "$FOLDER_TESTS/web/sites/default/tpl.services.yml"
-cp -v "./tests/template/robo.yml" "$FOLDER_TESTS/robo.yml"
+cp -v "$FOLDER_REPO/tests/template/tpl.settings.php" "$FOLDER_TESTS/web/sites/default/tpl.settings.php"
+cp -v "$FOLDER_REPO/tests/template/tpl.services.yml" "$FOLDER_TESTS/web/sites/default/tpl.services.yml"
+cp -v "$FOLDER_REPO/tests/template/robo.yml" "$FOLDER_TESTS/robo.yml"
 
 echo -e "\nOpen folder test: $FOLDER_TESTS\n"
 cd "$FOLDER_TESTS"
@@ -61,6 +61,10 @@ echo -e "\nRebuild cache\n"
 
 echo -e "\nExport configurations\n"
 ./vendor/bin/robo config:export
+
+echo -e "\nUse template settings from twig\n"
+cp -v "$FOLDER_REPO/tests/template/tpl.settings.php.twig" "$FOLDER_TESTS/web/sites/default/tpl.settings.php.twig"
+./vendor/bin/robo scaffold
 
 echo -e "\nInstall Drupal from configurations\n"
 ./vendor/bin/robo install:config minimal
