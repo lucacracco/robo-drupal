@@ -19,7 +19,6 @@
     "consolidation/robo": "~1",
     "drush/drush": "^9.7.1 | ^10.0.0",
     "grasmash/yaml-expander": "^1.4",
-    "heydon/robo-twig": "dev-master",
     "webflo/drupal-finder": "^1.0"
   },
   "autoload": {
