@@ -9,8 +9,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: [ '7.3', '7.4' ]
-        drupal-versions: [ '~9.0.0', '~9.1.0' ]
+        php-versions: [ '7.4', '8.0', '8.1' ]
+        drupal-versions: [ '~9.3.0', '~9.4.0' ]
     env:
       DRUPAL_CORE_CONSTRAINT: ${{ matrix.drupal-versions }}
 

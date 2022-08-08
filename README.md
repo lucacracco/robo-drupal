@@ -1,7 +1,7 @@
-# Robo.li & Drupal8
+# Robo.li & Drupal
 
 This repository contains a library dedicated to the initialization, building,
-management and maintenance of Drupal8 projects through the assistance of
+management and maintenance of Drupal8/9 projects through the assistance of
 Robo.li.
 
 ## Install

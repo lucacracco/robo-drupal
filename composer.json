@@ -1,6 +1,6 @@
 {
   "name": "lucacracco/robo-drupal",
-  "description": "A my custom Robo task runner for Drupal8.",
+  "description": "A my custom Robo task runner for Drupal.",
   "type": "robo-tasks",
   "keywords": [
     "drupal",
@@ -15,7 +15,7 @@
     }
   ],
   "require": {
-    "php": ">=7.2",
+    "php": ">=7.3",
     "consolidation/robo": "~2",
     "drush/drush": "^9.7.1 | ^10.0.0",
     "grasmash/yaml-expander": "^1.4",
@@ -27,5 +27,12 @@
     }
   },
   "minimum-stability": "dev",
-  "prefer-stable": true
+  "prefer-stable": true,
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true,
+      "drupal/core-composer-scaffold": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  }
 }

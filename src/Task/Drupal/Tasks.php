@@ -10,15 +10,15 @@ namespace LucaCracco\RoboDrupal\Task\Drupal;
 trait Tasks {
 
   /**
-   * Task Drupal8.
+   * Task Drupal.
    *
-   * @return \LucaCracco\RoboDrupal\Task\Drupal\Drupal8Task
+   * @return \LucaCracco\RoboDrupal\Task\Drupal\DrupalTask
    *   Drupal task.
    */
-  protected function taskDrupal8() {
+  protected function taskDrupal() {
 
-    /** @var \LucaCracco\RoboDrupal\Task\Drupal\Drupal8Task $task */
-    $task = $this->task(Drupal8Task::class);
+    /** @var \LucaCracco\RoboDrupal\Task\Drupal\DrupalTask $task */
+    $task = $this->task(DrupalTask::class);
     $task->setInput($this->input());
 
     /** @var \Symfony\Component\Console\Output\OutputInterface $output */
@@ -30,6 +30,18 @@ trait Tasks {
     }
 
     return $task;
+  }
+
+  /**
+   * Task Drupal8.
+   *
+   * @return \LucaCracco\RoboDrupal\Task\Drupal\DrupalTask
+   *   Drupal task.
+   * @deprecated in 2.x and is removed from 3.x. Use ::taskDrupal() instead
+   */
+  protected function taskDrupal8() {
+    @trigger_error('\LucaCracco\RoboDrupal\Task\Drupal\Tasks::taskDrupal8() is deprecated in 2.x and is removed from 3.x. Use \LucaCracco\RoboDrupal\Task\Drupal\Tasks::taskDrupal() instead.', E_USER_DEPRECATED);
+    return $this->taskDrupal();
   }
 
 }

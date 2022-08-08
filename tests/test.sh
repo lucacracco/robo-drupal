@@ -11,15 +11,18 @@ fi
 echo -e "\n\nDirectory running ${PWD}\n"
 FOLDER_REPO=${FOLDER_REPO:="${PWD}"}
 FOLDER_TESTS=${FOLDER_TESTS:="${PWD}/../robo-drupal-demo"}
-DRUPAL_CORE_CONSTRAINT="${DRUPAL_CORE_CONSTRAINT:=~9.0.0}"
+DRUPAL_CORE_CONSTRAINT="${DRUPAL_CORE_CONSTRAINT:=~9.3.0}"
 
 echo -e "\nClear/Create directory of install drupal for tests\n"
+rm -rf $FOLDER_TESTS
 mkdir -p $FOLDER_TESTS
 chmod 775 -R $FOLDER_TESTS
 rm -Rf $FOLDER_TESTS
 
 echo -e "\nInstalling Drupal $DRUPAL_CORE_CONSTRAINT on $FOLDER_TESTS\n"
-composer create-project drupal/recommended-project:$DRUPAL_CORE_CONSTRAINT $FOLDER_TESTS
+composer create-project drupal/recommended-project:$DRUPAL_CORE_CONSTRAINT $FOLDER_TESTS --no-install
+composer config allow-plugins true --working-dir=$FOLDER_TESTS
+composer install --prefer-dist --no-interaction --working-dir=$FOLDER_TESTS
 
 echo -e "\nInstalling Requirements\n"
 composer require --no-interaction --working-dir=$FOLDER_TESTS \
@@ -32,13 +35,11 @@ echo -e "\nInstalling RoboDrupal: set custom repository for RoboDrupal\n"
 composer config --working-dir=$FOLDER_TESTS repositories.1 "{\"type\": \"path\", \"url\": \"$FOLDER_REPO\", \"symlink\": true}"
 composer require --no-interaction --working-dir=$FOLDER_TESTS lucacracco/robo-drupal:@dev
 
-echo -e "\nUpdating dependencies\n"
-composer update --no-interaction --working-dir=$FOLDER_TESTS
-
 echo -e "\nCopy template settings\n"
 cp -v "$FOLDER_REPO/tests/template/tpl.settings.php" "$FOLDER_TESTS/web/sites/default/tpl.settings.php"
 cp -v "$FOLDER_REPO/tests/template/tpl.services.yml" "$FOLDER_TESTS/web/sites/default/tpl.services.yml"
 cp -v "$FOLDER_REPO/tests/template/robo.yml" "$FOLDER_TESTS/robo.yml"
+cp -v "$FOLDER_REPO/tests/template/RoboFile.php" "$FOLDER_TESTS/RoboFile.php"
 
 echo -e "\nOpen folder test: $FOLDER_TESTS\n"
 cd "$FOLDER_TESTS"
@@ -53,7 +54,7 @@ echo -e "\nScaffold and install Drupal minimal\n"
 ./vendor/bin/robo scaffold
 ./vendor/bin/robo install minimal
 
-echo -e "\nScaffold and install Drupal minimal\n"
+echo -e "\nDrupal status\n"
 ./vendor/bin/robo status
 
 echo -e "\nRebuild cache\n"

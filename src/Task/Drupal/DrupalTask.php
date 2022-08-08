@@ -7,11 +7,11 @@ use DrupalFinder\DrupalFinder;
 use LucaCracco\RoboDrupal\Task\BaseTasks;
 
 /**
- * Class Drupal8Task.
+ * Class DrupalTask.
  *
  * @package LucaCracco\RoboDrupal\Task\Drupal
  */
-class Drupal8Task extends BaseTasks {
+class DrupalTask extends BaseTasks {
 
   use \LucaCracco\RoboDrupal\Task\Drush\Tasks;
   use \LucaCracco\RoboDrupal\Task\Twig\Tasks;
@@ -29,7 +29,7 @@ class Drupal8Task extends BaseTasks {
   protected $site = 'default';
 
   /**
-   * Drupal8Task constructor.
+   * DrupalTask constructor.
    */
   public function __construct() {
     parent::__construct();
