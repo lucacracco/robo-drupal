@@ -109,22 +109,32 @@ class DrupalTask extends BaseTasks {
    * Export database.
    *
    * @param string $directory
+   *   The directory to save the dump file.
+   * @param string $file_name
+   *   The filename used for dump generated.
+   * @param boolean $gzip
+   *   If the dump will be gzipped.
    *
    * @return $this
    */
-  public function databaseExport($directory) {
+  public function databaseExport($directory, $file_name = '', $gzip = FALSE) {
     if (!file_exists($directory)) {
       throw new \InvalidArgumentException("Path \"$directory\" where to save the dump is not found.");
     }
-    $path = $directory . DIRECTORY_SEPARATOR . date('Ymd_Hm') . ".sql";
-    $task_list = [
+    $file_name = !empty($file_name) ? $file_name : date('Ymd_Hm');
+    $path = $directory . DIRECTORY_SEPARATOR . $file_name . ".sql";
+
+    $task_sql_dump = $this->getDrushStack()->drush('sql-dump')
+      ->option('result-file', $path);
+
+    if ($gzip) {
+      $task_sql_dump->option('gzip');
+    }
+
+    $this->getBuilder()->addTaskList([
       'cacheRebuild' => $this->getDrushStack()->drush('cache-rebuild'),
-      'sqlDump' => $this->getDrushStack()
-        ->drush('sql-dump')
-        ->option('gzip')
-        ->option('result-file', $path),
-    ];
-    $this->getBuilder()->addTaskList($task_list);
+      'sqlDump' => $task_sql_dump,
+    ]);
     return $this;
   }
 

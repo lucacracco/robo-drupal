@@ -80,7 +80,9 @@ class DrupalCommands extends \Robo\Tasks {
   /**
    * Export database.
    *
-   * @option directory Where to save the dump file.
+   * @arg directory Where to save the dump file.
+   * @option filename The file name to use for the dump file.
+   * @option gzip If you want gzipped file dump.
    * @command database:export
    *
    * @param string $directory
@@ -88,12 +90,13 @@ class DrupalCommands extends \Robo\Tasks {
    *
    * @return \LucaCracco\RoboDrupal\Task\Drupal\DrupalTask
    */
-  public function databaseExport($directory) {
+  public function databaseExport($directory, $options = ['filename' => NULL, 'gzip' => FALSE]) {
     if (!file_exists($directory)) {
       // TODO: crete directory.
       throw new \InvalidArgumentException("Path \"$directory\" where to save the dump is not found.");
     }
-    return $this->taskDrupal()->databaseExport($directory);
+    return $this->taskDrupal()
+      ->databaseExport($directory, $options['filename'], $options['gzip']);
   }
 
   /**

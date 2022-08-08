@@ -76,8 +76,13 @@ echo -e "\nUpdate configuration\n"
 echo -e "\nDeploy\n"
 ./vendor/bin/robo deploy
 
-#echo -e "\nExport database\n"
-#./vendor/bin/robo database:export /tmp
-#
+echo -e "\nExport database in gzip\n"
+./vendor/bin/robo database:export /tmp --gzip
+# todo: check file exist.
+ls /tmp -alt
+
+echo -e "\nExport database with custom filename\n"
+./vendor/bin/robo database:export /tmp --filename=drupal-dump
+
 #echo -e "\nInstall Drupal from database\n"
-#./vendor/bin/robo install:database [dump]
+#./vendor/bin/robo install:database /tmp/drupal-dump.sql
