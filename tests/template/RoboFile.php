@@ -12,14 +12,14 @@ class RoboFile extends \Robo\Tasks {
   use \LucaCracco\RoboDrupal\Task\Drupal\Tasks;
 
   /**
-   * Check run compatibility with taskDrupal8..
+   * Example post command.
    *
    * @hook post-command install
    */
   public function postInstallCommand($result, CommandData $commandData) {
     $this->getBuilder()->addCode(function () {
       $this->say("Post-Command Hook");
-    })->addTask($this->taskDrupal8()->cacheRebuild())->run();
+    })->addTask($this->taskDrupal()->cacheRebuild())->run();
   }
 
 }

@@ -20,7 +20,6 @@ trait Tasks {
     /** @var \LucaCracco\RoboDrupal\Task\Twig\TwigTask $task */
     $task = $this->task(TwigTask::class);
 
-    /** @var \Symfony\Component\Console\Output\OutputInterface $output */
     $output = $this->output();
     $task->setVerbosityThreshold($output->getVerbosity());
 

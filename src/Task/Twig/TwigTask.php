@@ -4,12 +4,10 @@ namespace LucaCracco\RoboDrupal\Task\Twig;
 
 use Robo\Common\TaskIO;
 use Robo\Exception\TaskException;
-use Robo\Exception\TaskExitException;
 use Robo\Task\BaseTask;
-use Twig_Environment;
-use Twig_Extension;
-use Twig_Loader_Array;
-use Twig_Loader_Filesystem;
+use Twig\Extension\ExtensionInterface;
+use Twig\Loader\ArrayLoader;
+use Twig\Loader\FilesystemLoader;
 
 /**
  * Class TwigTask.
@@ -22,28 +20,47 @@ class TwigTask extends BaseTask {
 
   use TaskIO;
 
+  /**
+   * @var array
+   */
   protected $context = [];
 
+  /**
+   * @var array
+   */
   protected $extensions = [];
 
+  /**
+   * @var array
+   */
   protected $processes = [];
 
+  /**
+   * @var array
+   */
   protected $templatesArray = [];
 
+  /**
+   * @var
+   */
   protected $templatesDirectory;
 
   /**
-   * @param Twig_Extension $extensions
+   * Add extension.
+   *
+   * @param \Twig\Extension\ExtensionInterface $extension
    *
    * @return $this
    */
-  public function addExtension(Twig_Extension $extension) {
+  public function addExtension(ExtensionInterface $extension) {
     $this->extensions[] = $extension;
 
     return $this;
   }
 
   /**
+   * Apply template.
+   *
    * @param $template
    * @param $destination
    * @param array $variables
@@ -61,21 +78,20 @@ class TwigTask extends BaseTask {
   }
 
   /**
-   * @return \Robo\Result|void
-   * @throws \Robo\Exception\TaskExitException
+   * {@inheritDoc}
    */
   public function run() {
     if (!isset($this->templatesDirectory) && empty($this->templatesArray)) {
-      throw new TaskExitException($this, 'Templates have not been defined.');
+      throw new TaskException($this, 'Templates have not been defined.');
     }
     if (isset($this->templatesDirectory)) {
-      $loader = new Twig_Loader_Filesystem($this->templatesDirectory);
+      $loader = new FilesystemLoader($this->templatesDirectory);
     }
     elseif (!empty($this->templatesArray)) {
-      $loader = new Twig_Loader_Array($this->templatesArray);
+      $loader = new ArrayLoader($this->templatesArray);
     }
 
-    $twig = new Twig_Environment($loader);
+    $twig = new \Twig\Environment($loader);
 
     if (!empty($this->extensions)) {
       foreach ($this->extensions as $extension) {
@@ -103,6 +119,8 @@ class TwigTask extends BaseTask {
   }
 
   /**
+   * Set context.
+   *
    * @param $id
    * @param null $value
    *
@@ -113,21 +131,24 @@ class TwigTask extends BaseTask {
       $this->context = $id;
       return $this;
     }
-
     $this->context[$id] = $value;
 
     return $this;
   }
 
   /**
-   * @param mixed $templatesArray
+   * Set templates array.
+   *
+   * @param $id
+   * @param null $content
    *
    * @return $this
+   *
    * @throws \Robo\Exception\TaskException
    */
   public function setTemplatesArray($id, $content = NULL) {
     if (isset($this->templatesDirectory)) {
-      throw new TaskException($this, 'template directory is already in use, unable to combine with template array.');
+      throw new TaskException($this, 'Templates array is already in use, unable to combine with template array.');
     }
 
     // reset the template array with the new variables.
@@ -141,16 +162,22 @@ class TwigTask extends BaseTask {
   }
 
   /**
+   * Set template directory.
+   *
    * @param string $templates_dir
+   *   The directory path
    *
    * @return $this
+   *
    * @throws \Robo\Exception\TaskException
    */
   public function setTemplatesDirectory($templates_dir) {
     if (!empty($this->templatesArray)) {
-      throw new TaskException($this, 'template array is already in use, unable to combine with template directory.');
+      throw new TaskException($this, 'Templates directory is already in use, unable to combine with template directory.');
     }
     $this->templatesDirectory = $templates_dir;
+
+    return $this;
   }
 
 }

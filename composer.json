@@ -15,9 +15,9 @@
     }
   ],
   "require": {
-    "php": ">=7.3",
-    "consolidation/robo": "~2",
-    "drush/drush": "^9.7.1 | ^10.0.0",
+    "php": ">=7.4",
+    "consolidation/robo": "~3",
+    "drush/drush": "^9.7.1 | ^10.0.0 | ^11.0.0",
     "grasmash/yaml-expander": "^1.4",
     "webflo/drupal-finder": "^1.0"
   },

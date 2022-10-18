@@ -50,22 +50,23 @@ cd "$FOLDER_TESTS"
 #ls -alt "$FOLDER_TESTS/vendor/lucacracco"
 #ls -alt "$FOLDER_REPO"
 
-echo -e "\nScaffold and install Drupal minimal\n"
-./vendor/bin/robo scaffold
-./vendor/bin/robo install minimal
-
-echo -e "\nDrupal status\n"
-./vendor/bin/robo status
-
-echo -e "\nRebuild cache\n"
-./vendor/bin/robo cache-rebuild
-
-echo -e "\nExport configurations\n"
-./vendor/bin/robo config:export
+# Print versioning.
+echo -e "\nPrint versioning Tools\n"
+./vendor/bin/robo --version
+./vendor/bin/drush --version
 
 echo -e "\nUse template settings from twig\n"
 cp -v "$FOLDER_REPO/tests/template/tpl.settings.php.twig" "$FOLDER_TESTS/web/sites/default/tpl.settings.php.twig"
 ./vendor/bin/robo scaffold
+
+echo -e "\nInstall Drupal: Minimal profile\n"
+./vendor/bin/robo install minimal
+
+echo -e "\nExport configurations\n"
+./vendor/bin/robo config:export
+
+echo -e "\nRebuild cache\n"
+./vendor/bin/robo cache-rebuild
 
 echo -e "\nInstall Drupal from configurations\n"
 ./vendor/bin/robo install:config minimal

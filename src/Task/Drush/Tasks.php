@@ -23,9 +23,8 @@ trait Tasks {
 
     /** @var \LucaCracco\RoboDrupal\Task\Drush\DrushTask $task */
     $task = $this->task(DrushTask::class);
-    $task->setInput($this->input());
+    $task->setProcessInput($this->input());
 
-    /** @var \Symfony\Component\Console\Output\OutputInterface $output */
     $output = $this->output();
     $task->setVerbosityThreshold($output->getVerbosity());
 

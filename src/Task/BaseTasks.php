@@ -2,8 +2,6 @@
 
 namespace LucaCracco\RoboDrupal\Task;
 
-use Robo\Collection\Collection;
-use Robo\Common\BuilderAwareTrait;
 use Robo\Common\IO;
 use Robo\Contract\BuilderAwareInterface;
 use Robo\LoadAllTasks;

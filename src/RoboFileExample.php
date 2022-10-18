@@ -8,7 +8,7 @@
 class RoboFileExample extends \Robo\Tasks {
 
   use \Robo\Common\IO;
-  use \Robo\Task\Filesystem\loadTasks;
+  use \Robo\Task\Filesystem\Tasks;
   use \LucaCracco\RoboDrupal\Task\Drush\Tasks;
   use \LucaCracco\RoboDrupal\Traits\MultiSite;
 

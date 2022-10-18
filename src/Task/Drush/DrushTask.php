@@ -221,7 +221,7 @@ class DrushTask extends CommandStack {
     }
 
     // Set $input to NULL so that it is not inherited by the process.
-    $this->setInput(NULL);
+    $this->setProcessInput(NULL);
 
     // If 'stopOnFail' is not set, or if there is only one command to run,
     // then execute the single command to run.
