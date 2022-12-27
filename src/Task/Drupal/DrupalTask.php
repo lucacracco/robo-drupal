@@ -162,12 +162,12 @@ class DrupalTask extends BaseTasks {
    */
   public function deploy() {
     $task_list = [
-      'updateDb' => $this->taskDrushStack()->drush('updatedb'),
-      'configImport' => $this->taskDrushStack()->drush('config-import'),
-      'cacheRebuild' => $this->taskDrushStack()
+      'updateDb' => $this->getDrushStack()->drush('updatedb'),
+      'configImport' => $this->getDrushStack()->drush('config-import'),
+      'cacheRebuild' => $this->getDrushStack()
         ->drush('cache-rebuild'),
-      'configImport_2' => $this->taskDrushStack()->drush('config-import'),
-      'cacheRebuild_2' => $this->taskDrushStack()->drush('cache-rebuild'),
+      'configImport_2' => $this->getDrushStack()->drush('config-import'),
+      'cacheRebuild_2' => $this->getDrushStack()->drush('cache-rebuild'),
     ];
     $this->getBuilder()->addTaskList($task_list);
     return $this;
