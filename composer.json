@@ -1,6 +1,6 @@
 {
   "name": "lucacracco/robo-drupal",
-  "description": "A my custom Robo task runner for Drupal8.",
+  "description": "A my custom Robo task runner for Drupal9.",
   "type": "robo-tasks",
   "keywords": [
     "drupal",
@@ -15,12 +15,12 @@
     }
   ],
   "require": {
-    "php": ">=7.2",
-    "consolidation/robo": "~1",
-    "drush/drush": "^9.7.1 | ^10.0.0",
-    "grasmash/yaml-expander": "^1.4",
+    "php": ">=8.0",
+    "consolidation/robo": "~3.0.11",
+    "drush/drush": "^10.0.0 | ^11.4",
+    "grasmash/yaml-expander": "^3.0",
     "heydon/robo-twig": "dev-master",
-    "webflo/drupal-finder": "^1.0"
+    "webflo/drupal-finder": "^1.2"
   },
   "autoload": {
     "psr-4": {
