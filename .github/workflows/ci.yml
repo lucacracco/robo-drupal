@@ -3,16 +3,19 @@ on: [ push, pull_request ]
 
 jobs:
   testing:
-    name: Drupal ${{ matrix.drupal-versions }} with PHP ${{ matrix.php-versions }}
+    name: Drupal ${{ matrix.drupal-version }} with PHP ${{ matrix.php-version }}
     runs-on: ubuntu-latest
-    container: php:${{ matrix.php-versions }}-fpm-buster
+    container: drupal:php${{ matrix.php-version }}-fpm-buster
     strategy:
       fail-fast: false
       matrix:
-        php-versions: [ '7.4', '8.0', '8.1' ]
-        drupal-versions: [ '~9.3.0', '~9.4.0' ]
+        php-version: [ '7.4', '8.0', '8.1' ]
+        drupal-version: [ '~9.4.0', '~9.5.0', '~10.0.0' ]
+        exclude:
+          - php-version: 7.4
+            drupal-version: '~10.0.0'
     env:
-      DRUPAL_CORE_CONSTRAINT: ${{ matrix.drupal-versions }}
+      DRUPAL_CORE_CONSTRAINT: ${{ matrix.drupal-version }}
 
     steps:
       - name: Checkout Coder

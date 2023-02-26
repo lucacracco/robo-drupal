@@ -1,8 +1,7 @@
 # Robo.li & Drupal
 
-This repository contains a library dedicated to the initialization, building,
-management and maintenance of Drupal8/9 projects through the assistance of
-Robo.li.
+This repository contains a library dedicated to the initialization, building, management and maintenance of Drupal8/9
+projects through the assistance of Robo.li.
 
 ## Install
 
@@ -35,8 +34,5 @@ Run command for install Drupal (standard profile)
 
 ## Notes
 
-* **Recommended for Drupal ~8.9.0**;
-* The `2.x` releases require `consolidation/robo:~2`;
-* When use multisite features is required to configure `sites.php` with all
-  sites that you are working.
+* When use multisite features is required to configure `sites.php` with all sites that you are working.
  
