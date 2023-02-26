@@ -14,6 +14,8 @@ jobs:
         exclude:
           - php-version: 7.4
             drupal-version: '~10.0.0'
+          - php-version: 8.0
+            drupal-version: '~10.0.0'
     env:
       DRUPAL_CORE_CONSTRAINT: ${{ matrix.drupal-version }}
 
