@@ -373,7 +373,15 @@ class DrupalTask extends BaseTasks {
       'required' => TRUE,
     ];
     $this->getBuilder()->addCode(function () use ($settings, $base) {
-      drupal_rewrite_settings($settings, $base . '/settings.php');
+      if (class_exists('Drupal\Core\Site\SettingsEditor')) {
+        \Drupal\Core\Site\SettingsEditor::rewrite($base . '/settings.php', $settings);
+      }
+      elseif (function_exists('drupal_rewrite_settings')) {
+        drupal_rewrite_settings($settings, $base . '/settings.php');
+      }
+      else {
+        throw new \Exception("Settings editor not available!");
+      }
     });
 
     return $this;
