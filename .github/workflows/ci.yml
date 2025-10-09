@@ -5,7 +5,7 @@ jobs:
   testing:
     name: Drupal ${{ matrix.drupal-version }} with PHP ${{ matrix.php-version }}
     runs-on: ubuntu-latest
-    container: drupal:php${{ matrix.php-version }}-fpm-buster
+    container: drupal:php${{ matrix.php-version }}-fpm
     strategy:
       fail-fast: false
       matrix:
