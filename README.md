@@ -1,6 +1,6 @@
 # Robo.li & Drupal
 
-This repository contains a library dedicated to the initialization, building, management and maintenance of Drupal8/9/10
+This repository contains a library dedicated to the initialization, building, management and maintenance of Drupal10/11
 projects through the assistance of Robo.li.
 
 ## Install
