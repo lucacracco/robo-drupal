@@ -9,13 +9,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: [ '8.1', '8.2', '8.3' ]
+        php-version: [ '8.2', '8.3' ]
         drupal-version: [ '~10.0.0', '~10.1.0', '~10.2.0', '~10.3.0', '~10.4.0', '~10.5.0', '~11.0.0', '~11.1.0' ]
         exclude:
-          - php-version: 8.1
-            drupal-version: '~11.0.0'
-          - php-version: 8.1
-            drupal-version: '~11.1.0'
           - php-version: 8.2
             drupal-version: '~11.0.0'
           - php-version: 8.2

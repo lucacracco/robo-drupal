@@ -3,7 +3,7 @@
 # Exit when any command fails.
 set -e
 
-PHP_VERSION=${PHP_VERSION:='8.1'}
+PHP_VERSION=${PHP_VERSION:='8.2'}
 DRUPAL_CORE_CONSTRAINT="${DRUPAL_CORE_CONSTRAINT:=~10.0.0}"
 
 echo -e "\n\e[94m[info] Run tests with PHP $PHP_VERSION for Drupal $DRUPAL_CORE_CONSTRAINT \e[0m\n"

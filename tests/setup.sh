@@ -4,7 +4,7 @@ set -e
 
 echo -e "\n\e[94m[info] Install dev dependencies tools \e[0m\n"
 apt-get update >/dev/null
-apt-get install -y -qq --no-install-recommends \
+DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends \
   unzip \
   git \
   sqlite3 >/dev/null
